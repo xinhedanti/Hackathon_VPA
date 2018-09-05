@@ -34,7 +34,7 @@ public class VoiceEnrollmentView extends AppCompatActivity {
     private MediaRecorder mMediaRecorder = null;
 
     private VoiceItAPI2 mVoiceIt2;
-    private String mUserID = "usr_c41fa437eb314a9e96cf56cec8599dc0";
+    private String mUserID = "";
     private String mContentLanguage = "";
     private String mPhrase = "";
 
@@ -107,7 +107,7 @@ public class VoiceEnrollmentView extends AppCompatActivity {
             public void onSuccess(int statusCode, Header[] headers, JSONObject Response) {
                 // Record voice and enroll
                 recordVoice();
-                System.out.println("record voice finish....");
+                System.out.println("record voice finish....UserId : " + mUserID);
             }
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
@@ -155,6 +155,7 @@ public class VoiceEnrollmentView extends AppCompatActivity {
             }
         } else {
             // Permissions granted, so continue with view
+            System.out.print("Permission granted, continue to start enrollment");
             startEnrollmentFlow();
             System.out.println("Permission Granted and Finish Enrollment Flow.....");
         }

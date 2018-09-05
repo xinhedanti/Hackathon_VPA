@@ -1,14 +1,12 @@
 package com.voiceit.voiceit2sdk;
 
+import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Switch;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -17,7 +15,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import cz.msebera.android.httpclient.Header;
 
-import com.voiceit.voiceit2.VoiceEnrollmentView;
 import com.voiceit.voiceit2.VoiceItAPI2;
 
 import java.io.BufferedReader;
@@ -32,9 +29,13 @@ public class MainActivity extends AppCompatActivity {
     private VoiceItAPI2 myVoiceIt;
     private String userId="";
     private String userName="";
-    private String phrase = "Never forget tomorrow is a new day";
+    private String phrase = "welcome to the hackathon it's going to be fun";
     private String contentLanguage = "en-US";
     private boolean doLivenessCheck = false; // Liveness detection is not used for enrollment views
+
+    private boolean userCreated = false;
+
+    public EditText _userName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,70 +44,78 @@ public class MainActivity extends AppCompatActivity {
 
         myVoiceIt = new VoiceItAPI2("key_85952e14f77b4d6eb4f6df20c578004d","tok_1dc13da43844428391585c4b35375fad");
 
+        //create userId in the beginning
+        myVoiceIt.createUser(new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                //retrieve the value of user id
+                try {
+                    userId = (String)response.get("userId");
+                    System.out.println("Create User Successful : " + response.toString() + " " + userName + " " + userId);
+                    userCreated = true;
 
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                //store the user name;user id pair into txt
+                //saveInfo(getBaseContext(),userName,userId);
+            }
 
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                if (errorResponse != null) {
+                    System.out.println("Create User Failed : " + errorResponse.toString());
+                }
+            }
+        });
     }
 
 
     public void encapsulatedVoiceEnrollment(View view) {
-
-        userName = findViewById(R.id.userName).toString();
-
-
-            myVoiceIt.createUser(new JsonHttpResponseHandler() {
-                @Override
-                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                    //retrieve the value of user id
-                    try {
-                        userId = (String)response.get("userId");
-                        System.out.println("Create User Successful : " + response.toString() + " " + userName + " " + userId);
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    //store the user name;user id pair into txt
-                    saveInfo(getBaseContext(),userName,userId);
-
-                }
-
-                @Override
-                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                    if (errorResponse != null) {
-                        System.out.println("Create User Failed : " + errorResponse.toString());
-                    }
-                }
-
-            });
+        _userName = (EditText) this.findViewById(R.id.userName);
+        userName = _userName.getText().toString();
+        //if userName is found from file. override the userId with the value from the file.
+        //ideally, the logic should be if the user not found from mapping file, create new user. but can't have two functions in one onclick.
+        //this just workaround.
 
         myVoiceIt.encapsulatedVoiceEnrollment(this, userId, contentLanguage, phrase, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                System.out.println("encapsulatedVoiceEnrollment Success Result : " + response.toString() + " " + userId + " " + contentLanguage + " " + phrase);
+                System.out.println("encapsulatedVoiceEnrollment Success Result : " + response.toString() + " userName: " + userName + "userId: " + userId + " " + contentLanguage + " " + phrase);
+                //append userName;userId mapping to a file.
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 if (errorResponse != null) {
-                    System.out.println("encapsulatedVoiceEnrollment Failure Result : " + errorResponse.toString()+ " " + userId + " " + contentLanguage + " " + phrase);
+                    System.out.println("encapsulatedVoiceEnrollment Failure Result : " + errorResponse.toString()+ " userName: " + userName + "userId: " + userId + " " + contentLanguage + " " + phrase);
                 }
             }
         });
-     //   }else {Toast.makeText(this,"Please enter user name", Toast.LENGTH_LONG).show();}
-
 
     }
 
     public void encapsulatedVoiceVerification(View view) {
+
+        //get userName from editText
+        _userName = (EditText) this.findViewById(R.id.userName);
+        userName = _userName.getText().toString();
+
+        //look for userId from user info mapping file
+        //userId = FileInstreamxxx
+
+        System.out.println("I am in verification method, userName : " + userName + " userId: " + userId);
+
         myVoiceIt.encapsulatedVoiceVerification(this, userId, contentLanguage, phrase, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                System.out.println("encapsulatedVoiceVerification Result : " + response.toString());
+                System.out.println("encapsulatedVoiceVerification Success Result : " + response.toString() + " userName: " + userName + "userId : " + userId);
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 if (errorResponse != null) {
-                    System.out.println("encapsulatedVoiceVerification Result : " + errorResponse.toString());
+                    System.out.println("encapsulatedVoiceVerification Failure Result : userName : " + userName + " userId " + userId + errorResponse.toString());
                 }
             }
         });

@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.loopj.android.http.*;
 
@@ -712,6 +711,8 @@ public class VoiceItAPI2 {
 
     public void encapsulatedVoiceEnrollment(Activity activity, String userID, String contentLanguage, String phrase, final JsonHttpResponseHandler responseHandler) {
         System.out.println("breakpoint 0");
+
+
         if (!userIdFormatted(userID)) {
             responseHandler.sendFailureMessage(200, null, buildJSONFormatMessage().toString().getBytes(), new Throwable());
             System.out.println("userIdFormatted Error : " + responseHandler.toString());

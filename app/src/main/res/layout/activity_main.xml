@@ -7,44 +7,49 @@
     android:paddingTop="56dp"
     android:paddingLeft="24dp"
     android:paddingRight="24dp"
+    android:background="#000000"
+    android:theme="@style/Theme.AppCompat.Light"
     tools:context="com.voiceit.voiceit2sdk.MainActivity">
 
 
     <TextView
         android:id="@+id/textView"
+        android:layout_width="match_parent"
         android:layout_height="38dp"
         android:layout_margin="5dp"
-        android:layout_width="match_parent"
         android:text="Login ID:"
-        android:textSize="20sp" />
+        android:textColor="#ffffff"
+        android:textSize="24sp" />
 
     <EditText
         android:id="@+id/userName"
-        android:layout_height="wrap_content"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:background="#ffffff"
         android:hint="Please input your user ID"
         android:maxLines="1"
-        android:textColor="@android:color/black"/>
+        android:textAlignment="viewStart"
+        android:textColor="@android:color/black"
+        android:textSize="24sp"
+        android:textStyle="bold" />
 
 
     <Button
-        android:id="@+id/button5"
+        android:id="@+id/btn_enroll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:text="Voice Enrollment"
-        android:onClick="encapsulatedVoiceEnrollment" />
+        android:layout_margin="10dp"
+        android:onClick="encapsulatedVoiceEnrollment"
+        android:text="Voice Enrollment" />
+
 
     <Button
-        android:id="@+id/button6"
+        android:id="@+id/btn_verify"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:text="Voice Verification"
-        android:onClick="encapsulatedVoiceVerification"/>
+        android:layout_margin="10dp"
+        android:onClick="encapsulatedVoiceVerification"
+        android:text="Voice Verification" />
 
 </LinearLayout>
