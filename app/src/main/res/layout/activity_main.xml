@@ -17,7 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="38dp"
         android:layout_margin="5dp"
-        android:text="Login ID:"
+        android:text="Username"
         android:textColor="#ffffff"
         android:textSize="24sp" />
 
