@@ -1,0 +1,10 @@
+<resources>
+
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    </style>
+
+    <declare-styleable name="RadiusOverlayView">
+        <attr name="view_type" />
+    </declare-styleable>
+
+</resources>
