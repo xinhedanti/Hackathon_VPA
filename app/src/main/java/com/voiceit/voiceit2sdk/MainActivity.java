@@ -18,8 +18,11 @@ import cz.msebera.android.httpclient.Header;
 import com.voiceit.voiceit2.VoiceItAPI2;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
@@ -36,6 +39,8 @@ public class MainActivity extends AppCompatActivity {
     private boolean userCreated = false;
 
     public EditText _userName;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
         _userName = (EditText) this.findViewById(R.id.userName);
         userName = _userName.getText().toString();
         //if userName is found from file. override the userId with the value from the file.
+
         //ideally, the logic should be if the user not found from mapping file, create new user. but can't have two functions in one onclick.
         //this just workaround.
 
@@ -187,31 +193,34 @@ public class MainActivity extends AppCompatActivity {
 
         //Write file
 
-        public static boolean saveInfo(Context context,String name, String id){
+        public void writeFile(String name, String id){
+
+            FileOutputStream fos;
 
             try {
                 String info = name + ";" + id;
                 System.out.println("start to write");
-                FileOutputStream fos = context.openFileOutput("info.txt",0);
+                fos = openFileOutput("info.txt",MODE_APPEND);
+
                 fos.write(info.getBytes());
                 fos.close();
                 System.out.println("finish to write");
-                return true;
             } catch (Exception e) {
                 e.printStackTrace();
+                System.out.println("Write file failed");
             }
 
-            return false;
         }
 
 
         //Read file
-        public static Map<String,String> readInfo(Context context){
+        public static Map<String,String> readFile(Context context){
 
             Map<String,String> maps = new HashMap<>();
+            FileInputStream fis;
 
             try {
-                FileInputStream fis = context.openFileInput("info.txt");
+                fis = context.openFileInput("info.txt");
                 BufferedReader bf = new BufferedReader(new InputStreamReader(fis));
                 String info = bf.readLine();
 
@@ -221,6 +230,8 @@ public class MainActivity extends AppCompatActivity {
                 String password = split[1];
                 maps.put("name",name);
                 maps.put("id",password);
+
+                fis.close();
 
                 return maps;
             } catch (Exception e) {
